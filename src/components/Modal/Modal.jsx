@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { Backdrop, ModalWindow, ModalImage } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
-
 export class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
@@ -14,10 +13,7 @@ export class Modal extends Component {
   }
 
   handleKeyDown = e => {
-    console.log(e.code);
     if (e.code === 'Escape') {
-      console.log('should close modal window');
-
       this.props.onClose();
     }
   };
