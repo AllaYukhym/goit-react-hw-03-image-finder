@@ -40,18 +40,21 @@ export class App extends Component {
   loadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
-      // images: [...prevState.images, ...this.state.images],
     }));
   };
 
   componentDidUpdate(prevProps, prevState) {
+    const limit = 12;
+    const BASE_URL = 'https://pixabay.com/api/';
+    const KEY = '30730953-a4b99fedc073d2eca0df8a6a8';
+
     if (
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
       this.setState({ status: 'pending' });
       fetch(
-        `https://pixabay.com/api/?q=${this.state.query}&page=${this.state.page}&key=30730953-a4b99fedc073d2eca0df8a6a8&image_type=photo&orientation=horizontal&per_page=12`
+        `${BASE_URL}?q=${this.state.query}&page=${this.state.page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${limit}`
       )
         .then(res => {
           if (res.ok) {
@@ -62,14 +65,17 @@ export class App extends Component {
           );
         })
         .then(data =>
-          this.setState({
-            images: data.hits.map(({ id, webformatURL, largeImageURL }) => ({
-              id,
-              webformatURL,
-              largeImageURL,
-            })),
+          this.setState(prevState => ({
+            images: [
+              ...prevState.images,
+              ...data.hits.map(({ id, webformatURL, largeImageURL }) => ({
+                id,
+                webformatURL,
+                largeImageURL,
+              })),
+            ],
             status: 'resolved',
-          })
+          }))
         )
         .catch(error => this.setState({ error, status: 'regected' }));
     }
@@ -81,23 +87,28 @@ export class App extends Component {
 
   render() {
     const { images, status, error } = this.state;
+    const totalPage = Math.ceil(500 / 12);
 
     return (
       <>
         <Searchbar onSubmit={this.handleFormSubmit} />
-
-        {status === 'pending' && <Loader />}
-
         {status === 'rejected' && <h1>{error.message}</h1>}
-
-        {status === 'resolved' && (
+        {(status === 'resolved' || status === 'pending') && (
           <>
             <ImageGallery images={images} />
+            {status === 'resolved' && this.state.page < totalPage && (
+              <Button onClick={this.loadMore} />
+            )}
+            {images.length > 0 && status === 'pending' && <Loader />}
           </>
         )}
-        <Button onClick={this.loadMore} />
-        <ToastContainer autoClose={3000} />
+        {images.length == 0 && status === 'pending' && <Loader />}
+        {/* <ToastContainer autoClose={3000} /> */}
       </>
     );
   }
+}
+
+{
+  /* {images.length > 0 */
 }

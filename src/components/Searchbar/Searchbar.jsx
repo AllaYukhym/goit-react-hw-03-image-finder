@@ -45,7 +45,7 @@ export class Searchbar extends Component {
         <SearchForm onSubmit={this.handleSubmit}>
           <SearchFormButton type="submit">
             <SearchFormButtonLabel>
-              <ImSearch style={{ marginRight: 8 }} />
+              <ImSearch />
             </SearchFormButtonLabel>
           </SearchFormButton>
           <SearchFormInput
