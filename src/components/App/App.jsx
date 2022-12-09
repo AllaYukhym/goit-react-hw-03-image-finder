@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+// import axios from 'axios';
 import PropTypes from 'prop-types';
-import { ToastContainer } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
@@ -61,7 +62,10 @@ export class App extends Component {
             return res.json();
           }
           return Promise.reject(
-            new Error(`No images by query ${this.state.query}`)
+            toast.error(`No images by query ${this.state.query}`, {
+              duration: 2000,
+              position: 'top-right',
+            })
           );
         })
         .then(data =>
@@ -96,19 +100,15 @@ export class App extends Component {
         {(status === 'resolved' || status === 'pending') && (
           <>
             <ImageGallery images={images} />
-            {status === 'resolved' && this.state.page < totalPage && (
-              <Button onClick={this.loadMore} />
-            )}
-            {images.length > 0 && status === 'pending' && <Loader />}
+            {status === 'resolved' &&
+              this.state.page < totalPage &&
+              images.length > 0 && <Button onClick={this.loadMore} />}
+            {(images.length > 0 || images.length == 0) &&
+              status === 'pending' && <Loader />}
           </>
         )}
-        {images.length == 0 && status === 'pending' && <Loader />}
-        {/* <ToastContainer autoClose={3000} /> */}
+        <Toaster />
       </>
     );
   }
-}
-
-{
-  /* {images.length > 0 */
 }

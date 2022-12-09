@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ImSearch } from 'react-icons/im';
 import {
   SearchbarHeader,
@@ -31,8 +31,10 @@ export class Searchbar extends Component {
     e.preventDefault();
 
     if (this.state.query.trim() === '') {
-      toast('Please enter query.');
-      return;
+      return toast.error('Please enter query.', {
+        duration: 2000,
+        position: 'top-right',
+      });
     }
 
     this.props.onSubmit(this.state.query);
