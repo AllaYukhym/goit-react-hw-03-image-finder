@@ -13,6 +13,7 @@ export class App extends Component {
     initialImages: [],
     initialError: null,
     initialStatus: 'idle',
+    initialTotal: 0,
   };
 
   static propTypes = {
@@ -27,6 +28,7 @@ export class App extends Component {
     ),
     initialError: PropTypes.any,
     initialStatus: PropTypes.string.isRequired,
+    initialTotal: PropTypes.number.isRequired,
   };
 
   state = {
@@ -35,6 +37,7 @@ export class App extends Component {
     images: this.props.initialImages,
     error: this.props.initialError,
     status: this.props.initialStatus,
+    total: this.props.initialTotal,
   };
 
   loadMore = () => {
@@ -78,6 +81,7 @@ export class App extends Component {
               })),
             ],
             status: 'resolved',
+            total: data.total,
           }))
         )
         .catch(error => this.setState({ error, status: 'regected' }));
@@ -89,8 +93,8 @@ export class App extends Component {
   };
 
   render() {
-    const { images, status, error } = this.state;
-    const totalPage = Math.ceil(500 / 12);
+    const { images, status, error, total } = this.state;
+    const totalPage = Math.ceil(total / 12);
 
     return (
       <>
